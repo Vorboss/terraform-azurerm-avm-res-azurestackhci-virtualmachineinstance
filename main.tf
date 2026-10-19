@@ -123,6 +123,10 @@ resource "azapi_resource" "virtual_machine" {
   lifecycle {
     ignore_changes = [
       body.properties.storageProfile.vmConfigStoragePathId,
+      # linux_ssh_config is read from whoever runs the plan. Leave the key that
+      # was applied in place.
+      body.properties.osProfile.linuxConfiguration.ssh,
+      body.properties.osProfile.windowsConfiguration.ssh,
     ]
   }
 }
