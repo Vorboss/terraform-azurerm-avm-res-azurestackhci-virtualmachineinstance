@@ -10,11 +10,15 @@ resource "azapi_resource" "data_disks" {
       name = var.custom_location_id
       type = "CustomLocation"
     }
-    properties = {
-      diskSizeGB  = each.value.diskSizeGB
-      dynamic     = each.value.dynamic
-      containerId = each.value.containerId
-    }
+    # Leave containerId unset when the caller does not choose one. Azure assigns a
+    # storage container, and writing null back plans a perpetual clear.
+    properties = merge(
+      {
+        diskSizeGB = each.value.diskSizeGB
+        dynamic    = each.value.dynamic
+      },
+      each.value.containerId == null ? {} : { containerId = each.value.containerId },
+    )
   }
   tags = each.value.tags
 
