@@ -420,6 +420,10 @@ Default: `null`
 
 The following outputs are exported:
 
+### <a name="output_principal_id"></a> [principal\_id](#output\_principal\_id)
+
+Description: Principal ID of the Hybrid Compute machine system-assigned identity.
+
 ### <a name="output_resource_id"></a> [resource\_id](#output\_resource\_id)
 
 Description: This is the full output for the resource.
