@@ -127,6 +127,9 @@ resource "azapi_resource" "virtual_machine" {
       # was applied in place.
       body.properties.osProfile.linuxConfiguration.ssh,
       body.properties.osProfile.windowsConfiguration.ssh,
+      # Immutable after create. The API does not return it, and sending either
+      # true or an omitted value is rejected once the VM exists.
+      body.properties.osProfile.linuxConfiguration.disablePasswordAuthentication,
     ]
   }
 }

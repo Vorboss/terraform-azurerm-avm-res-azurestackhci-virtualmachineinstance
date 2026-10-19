@@ -13,18 +13,11 @@ locals {
   role_definition_resource_substring = "/providers/Microsoft.Authorization/roleDefinitions"
   virtual_machine_osProfile = {
     computerName = var.name
-    linuxConfiguration = merge(
-      {
-        provisionVMAgent       = true
-        provisionVMConfigAgent = true
-        ssh                    = var.linux_ssh_config == null ? {} : var.linux_ssh_config
-      },
-      # The cluster records this as true when SSH keys are present. A later
-      # update that omits it is read as false and rejected.
-      try(length(var.linux_ssh_config.publicKeys), 0) > 0 ? {
-        disablePasswordAuthentication = true
-      } : {},
-    )
+    linuxConfiguration = {
+      provisionVMAgent       = true
+      provisionVMConfigAgent = true
+      ssh                    = var.linux_ssh_config == null ? {} : var.linux_ssh_config
+    }
     windowsConfiguration = {
       provisionVMAgent       = true
       provisionVMConfigAgent = true
