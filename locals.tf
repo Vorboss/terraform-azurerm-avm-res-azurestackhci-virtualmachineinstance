@@ -38,13 +38,12 @@ locals {
       vmSize     = "Custom"
       processors = var.v_cpu_count
       memoryMB   = var.memory_mb
-      # Enabled with no bounds is an empty object. Null is a different value and
-      # plans a change against the empty object Azure stored.
-      dynamicMemoryConfig = (
-        var.dynamic_memory ?
-        (length(keys(local.dynamic_memory_config_omit_null)) == 0 ? {} : local.dynamic_memory_config_omit_null) :
-        null
-      )
+      # Omit the object when no bound is set. An empty object is rejected on
+      # create: Hyper-V reads the missing minimum as 0 MB, which must be
+      # between 32 MB and startup memory. Azure still returns {} for an
+      # omitted config; ignore_null_property on the VM resource keeps that
+      # from planning an update. Explicit bounds are sent as usual.
+      dynamicMemoryConfig = length(keys(local.dynamic_memory_config_omit_null)) == 0 ? null : local.dynamic_memory_config_omit_null
     }
     httpProxyConfig = var.http_proxy == null && var.https_proxy == null ? null : {
       httpProxy  = var.http_proxy

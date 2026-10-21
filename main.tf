@@ -108,6 +108,10 @@ resource "azapi_resource" "virtual_machine" {
   name      = "default" # value must be 'default' per 2023-09-01-preview
   parent_id = azapi_resource.hybrid_compute_machine.id
   type      = "Microsoft.AzureStackHCI/virtualMachineInstances@2023-09-01-preview"
+  # Null body properties are omitted from the request and from the plan diff.
+  # dynamicMemoryConfig relies on this: unset bounds stay null, and the {}
+  # Azure returns for that does not plan a change. See locals.tf.
+  ignore_null_property = true
   body = {
     extendedLocation = {
       type = "CustomLocation"
